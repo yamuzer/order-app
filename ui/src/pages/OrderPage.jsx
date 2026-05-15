@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react'
 import { MENUS } from '../data/menus'
 import { calcUnitPrice, getOptionKey } from '../utils/cart'
+import { useStore } from '../context/useStore'
 import MenuCard from '../components/MenuCard'
 import Cart from '../components/Cart'
 
@@ -9,6 +10,7 @@ function createEmptySelections() {
 }
 
 function OrderPage() {
+  const { addOrder } = useStore()
   const [optionSelections, setOptionSelections] = useState(createEmptySelections)
   const [cartItems, setCartItems] = useState([])
   const [message, setMessage] = useState('')
@@ -89,6 +91,7 @@ function OrderPage() {
       setMessage('담은 메뉴가 없습니다')
       return
     }
+    addOrder(cartItems, totalAmount)
     setMessage('주문이 완료되었습니다!')
     setCartItems([])
   }
