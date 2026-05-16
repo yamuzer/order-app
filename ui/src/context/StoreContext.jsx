@@ -23,7 +23,7 @@ export function StoreProvider({ children }) {
         unitPrice: item.unitPrice,
       })),
       totalAmount,
-      status: ORDER_STATUS.ACCEPTED,
+      status: ORDER_STATUS.PLACED,
     }
     setOrders((prev) => [order, ...prev])
     return order

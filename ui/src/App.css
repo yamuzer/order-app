@@ -579,6 +579,11 @@
   color: var(--blue);
 }
 
+.order-row__badge--placed {
+  background: #f3f4f6;
+  color: #4b5563;
+}
+
 .order-row__badge--in_progress {
   background: #fef9c3;
   color: #a16207;
