@@ -23,6 +23,7 @@ The PostgreSQL connection uses these `.env` values:
 - `DB_NAME`
 - `DB_USER`
 - `DB_PASSWORD`
+- `DB_SSL`
 
 Database scripts:
 
