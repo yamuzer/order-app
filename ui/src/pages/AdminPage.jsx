@@ -4,10 +4,19 @@ import InventorySection from '../components/admin/InventorySection'
 import OrderSection from '../components/admin/OrderSection'
 
 function AdminPage() {
-  const { orders, inventory, updateOrderStatus, updateInventory } = useStore()
+  const {
+    error,
+    inventory,
+    isLoading,
+    orders,
+    updateInventory,
+    updateOrderStatus,
+  } = useStore()
 
   return (
     <main className="admin-page">
+      {isLoading && <p className="page-state">관리자 데이터를 불러오는 중입니다</p>}
+      {error && <p className="page-state page-state--error">{error}</p>}
       <Dashboard orders={orders} />
       <InventorySection inventory={inventory} onUpdateInventory={updateInventory} />
       <OrderSection orders={orders} onUpdateOrderStatus={updateOrderStatus} />

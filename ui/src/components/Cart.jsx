@@ -1,6 +1,6 @@
 ﻿import { formatPrice, formatCartItemName } from '../utils/cart'
 
-function Cart({ items, totalAmount, onOrder, onQuantityChange }) {
+function Cart({ items, totalAmount, onOrder, onQuantityChange, isOrdering = false }) {
   const isEmpty = items.length === 0
 
   return (
@@ -49,10 +49,10 @@ function Cart({ items, totalAmount, onOrder, onQuantityChange }) {
           <button
             type="button"
             className="btn btn--primary btn--order"
-            disabled={isEmpty}
+            disabled={isEmpty || isOrdering}
             onClick={onOrder}
           >
-            주문하기
+            {isOrdering ? '주문 중' : '주문하기'}
           </button>
         </div>
       </div>

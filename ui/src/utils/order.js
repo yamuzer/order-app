@@ -1,23 +1,20 @@
 import { formatCartItemName } from './cart'
 
 export const ORDER_STATUS = {
-  PLACED: 'PLACED',
   ACCEPTED: 'ACCEPTED',
   IN_PROGRESS: 'IN_PROGRESS',
   COMPLETED: 'COMPLETED',
 }
 
 export const ORDER_STATUS_LABEL = {
-  PLACED: '대기',
   ACCEPTED: '주문 접수',
   IN_PROGRESS: '제조 중',
-  COMPLETED: '제조 완료',
+  COMPLETED: '완료',
 }
 
 export const NEXT_ACTION = {
-  PLACED: { label: '주문 접수', next: ORDER_STATUS.ACCEPTED },
-  ACCEPTED: { label: '제조 시작', next: ORDER_STATUS.IN_PROGRESS },
-  IN_PROGRESS: { label: '제조 완료', next: ORDER_STATUS.COMPLETED },
+  ACCEPTED: { label: '제조 중', next: ORDER_STATUS.IN_PROGRESS },
+  IN_PROGRESS: { label: '완료', next: ORDER_STATUS.COMPLETED },
 }
 
 export function formatOrderDate(isoString) {

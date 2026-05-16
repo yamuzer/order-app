@@ -1,19 +1,15 @@
-import { useState, useMemo } from 'react'
-import { MENUS } from '../data/menus'
+import { useMemo, useState } from 'react'
 import { calcUnitPrice, getOptionKey } from '../utils/cart'
 import { useStore } from '../context/useStore'
 import MenuCard from '../components/MenuCard'
 import Cart from '../components/Cart'
 
-function createEmptySelections() {
-  return Object.fromEntries(MENUS.map((m) => [m.id, []]))
-}
-
 function OrderPage() {
-  const { addOrder } = useStore()
-  const [optionSelections, setOptionSelections] = useState(createEmptySelections)
+  const { addOrder, error, isLoading, menus } = useStore()
+  const [optionSelections, setOptionSelections] = useState({})
   const [cartItems, setCartItems] = useState([])
   const [message, setMessage] = useState('')
+  const [isOrdering, setIsOrdering] = useState(false)
 
   const totalAmount = useMemo(
     () => cartItems.reduce((sum, item) => sum + item.lineTotal, 0),
@@ -86,36 +82,55 @@ function OrderPage() {
     setMessage('')
   }
 
-  function handleOrder() {
+  async function handleOrder() {
     if (cartItems.length === 0) {
       setMessage('담은 메뉴가 없습니다')
       return
     }
-    addOrder(cartItems, totalAmount)
-    setMessage('주문이 완료되었습니다!')
-    setCartItems([])
+
+    setIsOrdering(true)
+    setMessage('')
+
+    try {
+      await addOrder(cartItems)
+      setMessage('주문이 완료되었습니다!')
+      setCartItems([])
+    } catch (err) {
+      setMessage(err.message)
+    } finally {
+      setIsOrdering(false)
+    }
   }
 
   return (
     <main className="order-page">
       <section className="menu-section">
-        <div className="menu-grid">
-          {MENUS.map((menu) => (
-            <MenuCard
-              key={menu.id}
-              menu={menu}
-              selectedOptionIds={optionSelections[menu.id] || []}
-              onToggleOption={handleToggleOption}
-              onAddToCart={() => handleAddToCart(menu)}
-            />
-          ))}
-        </div>
+        {isLoading ? (
+          <p className="page-state">메뉴를 불러오는 중입니다</p>
+        ) : error ? (
+          <p className="page-state page-state--error">{error}</p>
+        ) : menus.length === 0 ? (
+          <p className="page-state">등록된 메뉴가 없습니다</p>
+        ) : (
+          <div className="menu-grid">
+            {menus.map((menu) => (
+              <MenuCard
+                key={menu.id}
+                menu={menu}
+                selectedOptionIds={optionSelections[menu.id] || []}
+                onToggleOption={handleToggleOption}
+                onAddToCart={() => handleAddToCart(menu)}
+              />
+            ))}
+          </div>
+        )}
       </section>
       <Cart
         items={cartItems}
         totalAmount={totalAmount}
         onOrder={handleOrder}
         onQuantityChange={handleQuantityChange}
+        isOrdering={isOrdering}
       />
       {message && (
         <p className="toast" role="status">
